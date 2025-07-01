@@ -6,7 +6,7 @@ Tìm hiểu về:
 
 1/ Typescript
 
-2/ Nitro
+2/ Expressjs
 
 3/ Sequelize
 
