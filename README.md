@@ -4,8 +4,11 @@ Description
 
 Tìm hiểu về:
 1/ Typescript
+
 2/ Nitro
+
 3/ Sequelize
+
 5/ Vue3
 
 Yêu cầu:
