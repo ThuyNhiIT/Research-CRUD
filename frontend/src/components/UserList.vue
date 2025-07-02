@@ -7,7 +7,12 @@
       </template>
     </Toolbar>
 
-    <DataTable :value="users" dataKey="id" class="p-datatable-sm">
+    <DataTable
+      :value="users"
+      dataKey="id"
+      class="p-datatable-sm"
+      @row-click="onUserClick"
+    >
       <Column field="id" header="ID" />
       <Column field="name" header="Tên" />
       <Column field="email" header="Email" />
@@ -19,6 +24,7 @@
       </Column>
     </DataTable>
 
+    <!-- Dialog Tạo / Sửa User -->
     <Dialog v-model:visible="showDialog" :header="isEdit ? 'Cập nhật User' : 'Thêm User'" :modal="true" :closable="false">
       <div class="p-fluid">
         <div class="field">
@@ -35,6 +41,18 @@
         <Button label="Lưu" @click="saveUser" />
       </template>
     </Dialog>
+
+    <!-- Dialog Hiển thị Research của User -->
+    <Dialog v-model:visible="showResearchDialog" :header="`Research của ${selectedUser?.name || ''}`" :modal="true" style="width: 50vw">
+      <DataTable :value="researches" dataKey="id">
+        <Column field="id" header="ID" />
+        <Column field="title" header="Tiêu đề" />
+        <Column field="description" header="Mô tả" />
+      </DataTable>
+      <template #footer>
+        <Button label="Đóng" @click="showResearchDialog = false" />
+      </template>
+    </Dialog>
   </div>
 </template>
 
@@ -43,11 +61,16 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useToast } from 'primevue/usetoast'
 
-const users = ref([])
+const users = ref<any[]>([])
 const showDialog = ref(false)
 const isEdit = ref(false)
 const form = ref({ id: null, name: '', email: '' })
 const toast = useToast()
+
+// Research state
+const showResearchDialog = ref(false)
+const selectedUser = ref<any>(null)
+const researches = ref<any[]>([])
 
 const fetchUsers = async () => {
   const res = await axios.get('http://localhost:3000/api/users')
@@ -94,6 +117,17 @@ const deleteUser = async (id: number) => {
 
 const closeDialog = () => {
   showDialog.value = false
+}
+
+const onUserClick = async ({ data }: any) => {
+  selectedUser.value = data
+  try {
+    const res = await axios.get(`http://localhost:3000/api/research/getByUserId?userId=${data.id}`)
+    researches.value = res.data
+    showResearchDialog.value = true
+  } catch {
+    toast.add({ severity: 'error', summary: 'Lỗi', detail: 'Không thể tải research', life: 3000 })
+  }
 }
 
 onMounted(fetchUsers)

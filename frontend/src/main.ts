@@ -9,6 +9,8 @@ import DataTable from 'primevue/datatable'
 import Column from 'primevue/column'
 import ToastService from 'primevue/toastservice'
 import Toast from 'primevue/toast'
+import Dropdown from 'primevue/dropdown'
+
 import 'primevue/resources/themes/aura-light-blue/theme.css'
 import 'primevue/resources/primevue.min.css'
 import 'primeicons/primeicons.css'
@@ -24,5 +26,7 @@ app.component('Toolbar', Toolbar)
 app.component('DataTable', DataTable)
 app.component('Column', Column)
 app.component('Toast', Toast)
+app.component('Dropdown', Dropdown)
+
 
 app.mount('#app')
