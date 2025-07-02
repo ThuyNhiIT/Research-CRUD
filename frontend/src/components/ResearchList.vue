@@ -2,7 +2,7 @@
   <div class="card">
     <Toolbar>
       <template #start>
-        <Button label="Thêm Research" icon="pi pi-plus" @click="showDialog = true" />
+        <Button label="Thêm Research" icon="pi pi-plus" @click="openNewDialog" />
       </template>
     </Toolbar>
 
@@ -13,12 +13,13 @@
       <Column field="User.name" header="Người tạo" />
       <Column header="Hành động">
         <template #body="slotProps">
+          <Button icon="pi pi-pencil" class="mr-3" @click="editResearch(slotProps.data)" />
           <Button icon="pi pi-trash" severity="danger" @click="deleteResearch(slotProps.data.id)" />
         </template>
       </Column>
     </DataTable>
 
-    <Dialog v-model:visible="showDialog" header="Thêm Research" :modal="true">
+    <Dialog v-model:visible="showDialog" :header="editingId ? 'Cập nhật Research' : 'Thêm Research'" :modal="true">
       <div class="p-fluid">
         <div class="field">
           <label for="title">Tiêu đề</label>
@@ -34,8 +35,8 @@
         </div>
       </div>
       <template #footer>
-        <Button label="Huỷ" @click="showDialog = false" />
-        <Button label="Lưu" @click="createResearch" />
+        <Button label="Huỷ" @click="closeDialog" />
+        <Button label="Lưu" @click="saveResearch" />
       </template>
     </Dialog>
   </div>
@@ -49,7 +50,9 @@ import { useToast } from 'primevue/usetoast'
 const researches = ref([])
 const users = ref([])
 const showDialog = ref(false)
+const editingId = ref<number | null>(null)
 const toast = useToast()
+
 const newResearch = ref({
   title: '',
   description: '',
@@ -66,12 +69,39 @@ const fetchUsers = async () => {
   users.value = res.data
 }
 
-const createResearch = async () => {
-  await axios.post('http://localhost:3000/api/research', newResearch.value)
+const openNewDialog = () => {
+  editingId.value = null
+  newResearch.value = { title: '', description: '', userId: null }
+  showDialog.value = true
+}
+
+const closeDialog = () => {
   showDialog.value = false
   newResearch.value = { title: '', description: '', userId: null }
+  editingId.value = null
+}
+
+const editResearch = (research: any) => {
+  newResearch.value = {
+    title: research.title,
+    description: research.description,
+    userId: research.userId
+  }
+  editingId.value = research.id
+  showDialog.value = true
+}
+
+const saveResearch = async () => {
+  if (editingId.value) {
+    await axios.put(`http://localhost:3000/api/research/${editingId.value}`, newResearch.value)
+    toast.add({ severity: 'success', summary: 'Đã cập nhật', detail: 'Research đã được cập nhật', life: 3000 })
+  } else {
+    await axios.post('http://localhost:3000/api/research', newResearch.value)
+    toast.add({ severity: 'success', summary: 'Thành công', detail: 'Đã thêm research', life: 3000 })
+  }
+
+  closeDialog()
   fetchResearches()
-  toast.add({ severity: 'success', summary: 'Thành công', detail: 'Đã thêm research', life: 3000 })
 }
 
 const deleteResearch = async (id: number) => {
