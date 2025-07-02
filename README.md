@@ -23,3 +23,43 @@ Yêu cầu:
 - Step 4: Code FE
 - Step 5: Test
 - Step 6: Báo cáo
+
+
+**NHÁP**
+====== chạy trong docker 
+docker exec -it mysql_db mysql -u root -p
+Nhập pass là root
+
+== Xem database 
+docker exec -it mysql_db mysql -u root -p -e "SHOW DATABASES;"
+
+== chạy migration
+npx sequelize-cli db:migrate
+
+
+== Tạo data mẫu trong seeder 
+Lệnh tạo file: 
+npx sequelize-cli seed:generate --name demo-users
+npx sequelize-cli seed:generate --name demo-researches
+
+Chạy dữ liệu: npx sequelize-cli db:seed:all
+Xóa dữ liệu: npx sequelize-cli db:seed:undo:all
+
+====== chạy trong docker 
+docker exec -it mysql_db mysql -u root -p
+Nhập pass là root
+
+== Xem database 
+docker exec -it mysql_db mysql -u root -p -e "SHOW DATABASES;"
+
+== chạy migration
+npx sequelize-cli db:migrate
+
+
+== Tạo data mẫu trong seeder 
+Lệnh tạo file: 
+npx sequelize-cli seed:generate --name demo-users
+npx sequelize-cli seed:generate --name demo-researches
+
+Chạy dữ liệu: npx sequelize-cli db:seed:all
+Xóa dữ liệu: npx sequelize-cli db:seed:undo:all
