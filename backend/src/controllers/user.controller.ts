@@ -21,35 +21,35 @@ export const getUsers = async (req: Request, res: Response) => {
   }
 };
 
-// // Cập nhật user theo ID
-// export const updateUser = async (req: Request, res: Response) => {
-//   try {
-//    const id = Number(req.params.id);
-//     const [updated] = await User.update(req.body, { where: { id } });
+// Cập nhật user theo ID
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+   const id = Number(req.params.id);
+    const [updated] = await User.update(req.body, { where: { id } });
 
-//     if (updated) {
-//       const updatedUser = await User.findByPk(id);
-//       return res.json(updatedUser);
-//     }
+    if (updated) {
+      const updatedUser = await User.findByPk(id);
+      return res.json(updatedUser);
+    }
 
-//     return res.status(404).json({ error: 'User not found' });
-//   } catch (err) {
-//     res.status(500).json({ error: 'Failed to update user' });
-//   }
-// };
+    return res.status(404).json({ error: 'User not found' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to update user' });
+  }
+};
 
-// // Xoá user theo ID
-// export const deleteUser = async (req: Request, res: Response) => {
-//   try {
-//     const id = Number(req.params.id);
-//     const deleted = await User.destroy({ where: { id } });
+// Xoá user theo ID
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    const deleted = await User.destroy({ where: { id } });
 
-//     if (deleted) {
-//       return res.json({ message: 'User deleted successfully' });
-//     }
+    if (deleted) {
+      return res.json({ message: 'User deleted successfully' });
+    }
 
-//     return res.status(404).json({ error: 'User not found' });
-//   } catch (err) {
-//     res.status(500).json({ error: 'Failed to delete user' });
-//   }
-// };
+    return res.status(404).json({ error: 'User not found' });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to delete user' });
+  }
+};

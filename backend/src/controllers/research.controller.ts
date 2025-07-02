@@ -18,3 +18,14 @@ export const getResearches = async (_req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to get researches' });
   }
 };
+
+// research.controller.ts
+export const getResearcheByUserId = async (req: Request, res: Response) => {
+  try {
+    const whereClause = req.query.userId ? { userId: req.query.userId } : undefined
+    const researches = await Research.findAll({ where: whereClause, include: User })
+    res.json(researches)
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to get researches' })
+  }
+}
